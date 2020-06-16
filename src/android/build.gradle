@@ -20,6 +20,11 @@ repositories {
     }
 }
 
+ext.appShortcutBadgerVersion = '1.1.22'
+dependencies {
+    implementation "me.leolin:ShortcutBadger:${appShortcutBadgerVersion}@aar"
+}
+
 cdvPluginPostBuildExtras.add({
     rootProject.subprojects {
         if (name == "app") {
@@ -42,5 +47,3 @@ cdvPluginPostBuildExtras.add({
         enableNdk true
     }
 })
-
-
