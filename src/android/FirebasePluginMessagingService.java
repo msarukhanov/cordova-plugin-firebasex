@@ -21,6 +21,8 @@ import com.crashlytics.android.Crashlytics;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import me.leolin.shortcutbadger.ShortcutBadger;
+
 import java.util.Map;
 import java.util.Random;
 
@@ -116,6 +118,8 @@ public class FirebasePluginMessagingService extends FirebaseMessagingService {
                 sound = notification.getSound();
                 color = notification.getColor();
                 icon = notification.getIcon();
+
+
             }else{
                 Log.i(TAG, "Received message: data");
                 messageType = "data";
@@ -138,6 +142,9 @@ public class FirebasePluginMessagingService extends FirebaseMessagingService {
                 if(data.containsKey("notification_android_visibility")) visibility = data.get("notification_android_visibility");
                 if(data.containsKey("notification_android_priority")) priority = data.get("notification_android_priority");
             }
+
+            String badge = data.get("badge");
+            this.updateBadge(badge);
 
             if (TextUtils.isEmpty(id)) {
                 Random rand = new Random();
@@ -344,5 +351,14 @@ public class FirebasePluginMessagingService extends FirebaseMessagingService {
         if(v != null && !b.containsKey(k)){
             b.putString(k, v);
         }
+    }
+
+    private void updateBadge(String badge) {
+         int count = badge == null ? 0 : Integer.parseInt(badge);
+         if (count > 0) {
+             ShortcutBadger.applyCount(this.getApplicationContext(), count);
+         } else if (count == 0) {
+             ShortcutBadger.removeCount(this.getApplicationContext());
+         }
     }
 }
